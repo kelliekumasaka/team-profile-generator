@@ -2,7 +2,7 @@
 ## Description
 This application allows a user to create a team based on role that has basic information for each employee. When a manager opens this program, they are asked for their name, email, id number, and office number. Then they can choose which employee role that they want to add and input each role's information. After they are done creating their team, an HTML is created with all of the entered information. On the created site, the manager can send an email to any of the employees, as well as access engineers' GitHub accounts.
 
-[![video of program](Develop/images/screenshot.png)](https://www.youtube.com/watch?v=G2JChPJuHf4)
+[![video of program](Develop/images/final.png)](https://www.youtube.com/watch?v=G2JChPJuHf4)
 
 ## Table of Contents
 * [Installation](#installation)
