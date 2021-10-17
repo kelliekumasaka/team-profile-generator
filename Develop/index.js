@@ -1,24 +1,27 @@
 const inquirer = require ("inquirer");
+const fs = require("fs");
 const generateHtml = require ("./util/generateHtml");
 const Manager  = require ("./lib/Manager");
 const Intern = require ("./lib/Intern");
 const Engineer = require ("./lib/Engineer");
 
+const team = [];
+
 const start = () => {
     inquirer.prompt([
         {
             type:'input',
-            name:'managerName',
+            name:'name',
             message:'Please enter manager name'
         },
         {
             type:'input',
-            name:'managerId',
+            name:'id',
             message:'Please enter manager ID'
         },
         {
             type:'input',
-            name:'managerEmail',
+            name:'email',
             message:'Please enter manager email'
         },
         {
@@ -26,24 +29,10 @@ const start = () => {
             name:'officeNumber',
             message:'Please enter office number'
         },
-        {
-            type:'list',
-            name:'type',
-            message:'Please select an option',
-            choices:['Add an engineer', 'Add an intern', 'Finish building your team']
-        }
     ]).then (answer => {
-        generateManager(answer);
-        switch(answer.type){
-            case 'Add an engineer':
-                addEngineer();
-                break;
-            case 'Add an intern':
-                addIntern();
-                break;
-            default:
-                break;
-        }
+        const newManager = new Manager (answer.name, answer.id, answer.email, answer.officeNumber);
+        team.push(newManager);
+        keepGoing();
     })
 }
 
@@ -70,7 +59,8 @@ const addEngineer = () => {
             message:"Please enter engineer's GitHub username"
         }
     ]).then(answer => {
-        generateEngineer(answer);
+        const newEngineer = new Engineer (answer.engineerName, answer.engineerId, answer.engineerEmail, answer.github);
+        team.push(newEngineer);
         keepGoing();
     })
 }
@@ -79,7 +69,7 @@ const addIntern = () => {
     inquirer.prompt([
         {
             type:'input',
-            name:'interName',
+            name:'internName',
             message:"Please enter intern's name"
         },
         {
@@ -95,24 +85,42 @@ const addIntern = () => {
         {
             type:'input',
             name:'university',
-            message:"Please enter intern's university"
+            message:"Please enter intern's school"
         }
     ]).then(answer => {
-        generateIntern(answer);
+        const newIntern = new Intern (answer.internName, answer.internId, answer.internEmail, answer.university);
+        team.push(newIntern);
         keepGoing();
     })
 }
 
 const keepGoing = () => {
     inquirer.prompt({
-        type:'confirm',
-        name:'continue',
-        message:['Would you like to add more team members?']
-    }).then(answer => {
-        if (answer.continue){
-            start();
+        type:'list',
+        name:'type',
+        message:'Please select an option',
+        choices:['Add an engineer', 'Add an intern', 'Finish building team']
+    }).then(answer =>{
+        switch(answer.type){
+            case 'Add an engineer':
+                addEngineer();
+                break;
+            case 'Add an intern':
+                addIntern();
+                break;
+            default:
+                makeTeam();
+                break;
+        }
+    })
+}
+
+const makeTeam = () =>{
+    fs.writeFile('team.html',generateHtml(team), (err) => {
+        if (err) {
+            console.error(err);
         }else{
-            console.log("You have completed your team!")
+            console.log("Your team is ready for you!");
         }
     })
 }
