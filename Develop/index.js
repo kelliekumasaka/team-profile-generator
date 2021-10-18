@@ -36,6 +36,37 @@ const start = () => {
     })
 }
 
+const keepGoing = () => {
+    inquirer.prompt({
+        type:'list',
+        name:'type',
+        message:'Please select an option',
+        choices:['Add an engineer', 'Add an intern', 'Finish building team']
+    }).then(answer => {
+        switch(answer.type){
+            case 'Add an engineer':
+                addEngineer();
+                break;
+            case 'Add an intern':
+                addIntern();
+                break;
+            default:
+                makeTeam();
+                break;
+        }
+    })
+}
+
+const makeTeam = () =>{
+    fs.writeFile('team.html',generateHtml(team), (err) => {
+        if (err) {
+            console.error(err);
+        }else{
+            console.log("Your team is ready for you!");
+        }
+    })
+}
+
 const addEngineer = () => {
     inquirer.prompt([
         {
@@ -91,37 +122,6 @@ const addIntern = () => {
         const newIntern = new Intern (answer.internName, answer.internId, answer.internEmail, answer.university);
         team.push(newIntern);
         keepGoing();
-    })
-}
-
-const keepGoing = () => {
-    inquirer.prompt({
-        type:'list',
-        name:'type',
-        message:'Please select an option',
-        choices:['Add an engineer', 'Add an intern', 'Finish building team']
-    }).then(answer =>{
-        switch(answer.type){
-            case 'Add an engineer':
-                addEngineer();
-                break;
-            case 'Add an intern':
-                addIntern();
-                break;
-            default:
-                makeTeam();
-                break;
-        }
-    })
-}
-
-const makeTeam = () =>{
-    fs.writeFile('team.html',generateHtml(team), (err) => {
-        if (err) {
-            console.error(err);
-        }else{
-            console.log("Your team is ready for you!");
-        }
     })
 }
 
